@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rights Comparison</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container">
+
+<h1 class="mt-4">Rights Comparison</h1>
+<div class="row">
+    <div class="col-md">
+        <label for="country" class="form-label mt-3">Select Country:</label>
+        <select id="country" class="form-select" onchange="loadProvinces()">
+            <option value="" selected disabled>Select Country</option>
+            <option value="canada">Canada</option>
+            <!-- Add more countries as needed -->
+        </select>
+    </div>
+
+    <div class="col-md">
+        <label for="province" class="form-label mt-3">Select Province:</label>
+        <select id="province" class="form-select" onchange="loadRights()">
+            <option value="" selected disabled>Select Province</option>
+            <option value="quebec">Quebec</option>
+            <!-- Add more provinces dynamically based on the selected country -->
+        </select>
+    </div>
+</div>
+
+<br>
+<div class="row">
+    <div class="col-md men-container">
+        <h3>Men's Rights</h3>
+        <ul class="list-unstyled men-rights-list">
+            <!-- Men's rights information will be added dynamically here -->
+        </ul>
+        <p>Total Men's Rights Count: <span class="rights-count" id="menRightsCount"></span></p>
+    </div>
+    <div class="col-md women-container">
+        <h3>Women's Rights</h3>
+        <ul class="list-unstyled women-rights-list">
+            <!-- Women's rights information will be added dynamically here -->
+        </ul>
+        <p>Total Women's Rights Count: <span class="rights-count" id="womenRightsCount"></span></p>
+    </div>
+</div>
+
+
+<!-- Include Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function loadProvinces() {
+        var country = document.getElementById("country").value;
+        var provinceSelect = document.getElementById("province");
+
+        // Reset province dropdown
+        provinceSelect.innerHTML = '<option value="" selected disabled>Select Province</option>';
+
+        // Populate provinces based on the selected country
+        if (country === "canada") {
+            var provinces = ["quebec", "ontario"]; // Replace with actual provinces for Canada
+            for (var i = 0; i < provinces.length; i++) {
+                var option = document.createElement("option");
+                option.value = provinces[i];
+                option.text = provinces[i].charAt(0).toUpperCase() + provinces[i].slice(1);
+                provinceSelect.add(option);
+            }
+        }
+        // Add more conditions for other countries
+    }
+
+    function loadRights() {
+        var country = document.getElementById("country").value;
+        var province = document.getElementById("province").value;
+
+        // Placeholder rights data
+        var rightsData = {
+            canada: {
+                quebec: {
+                    menRights: ["Right to vote", "Right to work", "Freedom of speech"],
+                    womenRights: ["Right to vote", "Right to work", "Freedom of speech"]
+                },
+                // Add more provinces as needed
+            },
+            // Add more countries as needed
+        };
+
+        // Display rights information dynamically
+        var menContainer = document.querySelector(".men-container");
+        var womenContainer = document.querySelector(".women-container");
+
+        // Function to generate HTML for rights
+        function generateRightsHTML(rights) {
+            var rightsHtml = '';
+            rights.forEach(function (right) {
+                rightsHtml += "<li>" + right + "</li>";
+            });
+
+            // Update rights count
+            var rightsCount = rights.length;
+            countElement.innerText = rightsCount;
+
+            // Set HTML for the container
+            container.querySelector(".rights-list").innerHTML = rightsHtml;
+        }
+
+        // Set HTML for the containers
+        generateRightsHTML(rightsData[country][province].menRights, menContainer, document.getElementById("menRightsCount"));
+        generateRightsHTML(rightsData[country][province].womenRights, womenContainer, document.getElementById("womenRightsCount"));
+
+        // Update rights count
+        var menRightsCount = document.getElementById("menRightsCount");
+        menRightsCount.innerText = rightsData[country][province].menRights.length;
+
+        var womenRightsCount = document.getElementById("womenRightsCount");
+        womenRightsCount.innerText = rightsData[country][province].womenRights.length;
+    }
+</script>
+
+</body>
+</html>
